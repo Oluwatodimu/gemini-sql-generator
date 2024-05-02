@@ -78,20 +78,28 @@ prompt = [
 st.set_page_config(page_title="Query Databases with Gemini Pro")
 st.header("Gemini App To Retrieve Data With Normal Text")
 
-question = st.text_input("Input: ", key="input")
+question = st.text_input("Enter your text:", key="input", placeholder="Type your text here")
 
 submit = st.button("Ask the question")
 
 # if submit is clicked
 try:
     if submit:
+
+        if question is None or question == "":
+            raise Exception("question cannot be null")
+
+        print("user input: " + question)
         response = get_gemini_response(question, prompt)
-        print(response)
+
+        print("gemini query: " + response)
         response = read_sql_query(response)
+
         st.subheader("The Response is")
         for row in response:
             print(row)
             st.header(row)
 
 except Exception as exception:
+    print(exception)
     st.header("could not generate query from your input")
